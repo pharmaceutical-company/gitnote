@@ -4,9 +4,21 @@ app = Blueprint('main', __name__)
 
 @app.route('/')
 def index():
-    return redirect(url_for('main.main'))
+    return redirect(url_for('main.list'))
 
-@app.route('/main')
-def main():
-    return render_template('main.html')
+@app.route('/list')
+def list():
+    return render_template('list.html')
+
+@app.route('/new')
+def new():
+    return render_template('editor.html')
+
+@app.route('/edit')
+def edit():
+    return render_template('editor.html')
+
+@app.route('/view')
+def view():
+    return render_template('view.html')
 

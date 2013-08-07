@@ -11,7 +11,7 @@ Editor
 <h1>Editor</h1>
 <style type="text/css" media="screen">
     #editor { 
-        height: 100px;
+        height: 280px;
     }
 </style>
 <div id="editor">function foo(items) {
@@ -24,5 +24,14 @@ Editor
     editor.setTheme("ace/theme/monokai");
     editor.getSession().setMode("ace/mode/javascript");
 </script>
+<div id="buttons" style="overflow: hidden;">
+    <div style="float: left;">
+      <button type="button" class="btn btn-default">Add Another File</button>
+    </div>
+
+    <div style="text-align: right;">
+      <button type="button" class="btn btn-primary" style="float: right;">Create Gitnote</button>
+    </div>
+</div>
 {% endblock %}
 

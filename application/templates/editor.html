@@ -36,10 +36,10 @@ Editor
     <div class="file">
         <div class="file-meta row">
             <div class="col-lg-4">
-                <input type="text" name="file[][name]" placeholder="Input this file name." class="form-control">
+                <input type="text" placeholder="Input this file name." class="file-name form-control">
             </div>
         </div>
-        <textarea name="file[][content]" class="file-editor-textarea"></textarea>
+        <textarea class="file-editor-textarea"></textarea>
         <div class="file-editor row">function foo(items) {
     var x = "All this is syntax highlighted";
     return x;
@@ -48,18 +48,65 @@ Editor
 {% endfor %}
 </div>
 
+<script type="text/html" id="new-editor">
+<div class="file">
+    <div class="file-meta row">
+        <div class="col-lg-4">
+            <input type="text" placeholder="Input this file name." class="file-name form-control">
+        </div>
+    </div>
+    <textarea class="file-editor-textarea"></textarea>
+    <div class="file-editor row"></div>
+</div>
+</script>
+
 <script>
-    var list = $('.file-editor');
-    for(i in list) {
-        var editor = ace.edit(list[i]);
-        editor.setTheme("ace/theme/monokai");
-        editor.getSession().setMode("ace/mode/javascript");
+function newFile(type) {
+    switch(type) {
+    case 'editor':
+        var file = $($('#new-editor').html().replace(/(^|>)[\s|\t|\n]+(<|$)/g, '$1$2'));
+        initFileEditor(file);
+        return file;
+    default:
     }
+}
+
+function initFileEditor(element) {
+    element = $(element);
+
+    if(!element.hasClass('file'))
+        return;
+
+    var name = element.find('.file-name');
+
+    var editor_textarea = element.find('.file-editor-textarea');
+    var editor = element.find('.file-editor')[0];
+    editor = ace.edit(editor);
+    editor.setTheme("ace/theme/monokai");
+    editor.getSession().setMode("ace/mode/javascript");
+
+    // Sync editor and textarea.
+    editor_textarea.val(editor.getSession().getValue());
+    editor.getSession().on('change', function(){
+        console.log(editor_textarea.val());
+        editor_textarea.val(editor.getSession().getValue());
+    });
+
+    // Sync editor and textarea.
+    editor_textarea.attr('name', 'gitnote/' + name.val())
+    name.bind("change paste keyup", function() {
+        editor_textarea.attr('name', 'gitnote/' + name.val())
+    });
+
+    return element;
+}
+
+$('#list-files').children().each(function(){initFileEditor(this)});
 </script>
 
 <div id="buttons" style="overflow: hidden;">
     <div style="float: left;">
-      <button type="button" class="btn btn-default">Add Another File</button>
+      <button type="button" class="btn btn-default" onclick="$('#list-files').append(newFile('editor'))">Add Another File</button>
     </div>
 
     <div style="text-align: right;">

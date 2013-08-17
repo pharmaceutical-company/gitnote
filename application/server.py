@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, request
+
+from application.tools import git
 
 app = Blueprint('main', __name__)
 
@@ -10,8 +12,12 @@ def index():
 def list():
     return render_template('list.html')
 
-@app.route('/new')
+@app.route('/new', methods=['GET'])
 def new():
+    return render_template('editor.html')
+
+@app.route('/new', methods=['POST'])
+def new_post():
     return render_template('editor.html')
 
 @app.route('/edit')

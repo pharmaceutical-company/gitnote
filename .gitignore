@@ -1,4 +1,5 @@
 venv
+config.ini
 *.py[cod]
 
 # C extensions

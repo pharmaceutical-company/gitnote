@@ -1,3 +1,5 @@
+import re
+
 from flask import Blueprint, render_template, redirect, url_for, request
 
 from application.tools import git
@@ -18,6 +20,17 @@ def new():
 
 @app.route('/new', methods=['POST'])
 def new_post():
+    repo = git.new_repo() 
+    file_list = []
+    for key in request.form:
+        if not re.match(r'^gitnote\/(.*)', key):
+            continue
+        name = re.findall(r'^gitnote\/(.*)', key)[0]
+        data = str(request.form[key])
+        repo.stage_data(name, data)
+    commit_id = repo.do_commit('Gitnote',
+                                committer='gitnote <gitnote@gitnote.com>')
+            
     return render_template('editor.html')
 
 @app.route('/edit')

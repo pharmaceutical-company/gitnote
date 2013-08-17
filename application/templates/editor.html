@@ -27,37 +27,38 @@ Editor
 </style>
 {% endblock %}
 
-{% block body %}
-<h1>Editor</h1>
-
-<form method="post">
-<div id="list-files">
-{% for i in range(2) %}
-    <div class="file">
-        <div class="file-meta row">
-            <div class="col-lg-4">
-                <input type="text" placeholder="Input this file name." class="file-name form-control">
-            </div>
-        </div>
-        <textarea class="file-editor-textarea"></textarea>
-        <div class="file-editor row">function foo(items) {
-    var x = "All this is syntax highlighted";
-    return x;
-}</div>
-    </div>
-{% endfor %}
-</div>
-
-<script type="text/html" id="new-editor">
+{% macro file_editor() -%}
 <div class="file">
     <div class="file-meta row">
         <div class="col-lg-4">
-            <input type="text" placeholder="Input this file name." class="file-name form-control">
+            <input type="text" placeholder="input this file name." class="file-name form-control">
         </div>
     </div>
     <textarea class="file-editor-textarea"></textarea>
     <div class="file-editor row"></div>
 </div>
+{%- endmacro %}
+
+{% block body %}
+{% if not filelist %}
+<h1>New Note</h1>
+{% else %}
+<h1>Edit Note</h1>
+{% endif %}
+
+<form method="post">
+<div id="list-files">
+{% if not filelist %}
+    {{ file_editor() }}
+{% else %}
+    {% for file in filelist %}
+        {{ file_editor() }}
+    {% endfor %}
+{% endif %}
+</div>
+
+<script type="text/html" id="new-editor">
+{{ file_editor() }}
 </script>
 
 <script>

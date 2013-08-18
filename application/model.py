@@ -23,11 +23,8 @@ class Note(Base):
     name = Column(Unicode(255), nullable=False)
     description = Column(UnicodeText, nullable=False)
 
-    def __init__(self, phys_name, repr_name):
-        self.phys_name = phys_name
-        self.repr_name = repr_name
     def __repr__(self):
-        return "<Repository('%s','%s')>" % (self.phys_name, self.repr_name)
+        return "<Note('%d', '%s','%s')>" % (self.id, self.name, self.description)
 
 """
 class Files(Base):

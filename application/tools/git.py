@@ -23,14 +23,8 @@ class NoteRepo(Repo):
         #                stat_val.st_gid, stat_val.st_size, blob.id, 0)
         index.write()
 
-def generate_id():
-    id = '%05d' % random.randint(1, 99999)
-#    if id in repos:
-#        return generate_id():
-    return id
-
-def new_repo():
-    repo_id = generate_id()
+def new_repo(id):
+    repo_id = '%d' % id
     repo_path = os.path.join(REPO_DIR, '%s.git' % repo_id)
 
     os.makedirs(repo_path)

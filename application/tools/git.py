@@ -7,6 +7,14 @@ REPO_DIR = '/tmp/gitnote'
 
 class NoteRepo(Repo):
     def stage_data(self, name, data):
+        name = name.lstrip(os.path.sep)
+        f = open(os.path.join(self.path, name), 'wb')
+        try:
+            f.write(data)
+        finally:
+            f.close()
+        return self.stage(name)
+
         from dulwich.index import index_entry_from_stat
         index = self.open_index()
 
@@ -32,3 +40,10 @@ def new_repo(id):
 
     return repo
 
+def get_repo(id):
+    repo_id = '%d' % id
+    repo_path = os.path.join(REPO_DIR, '%s.git' % repo_id)
+
+    repo = NoteRepo(repo_path)
+
+    return repo

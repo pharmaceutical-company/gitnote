@@ -1,4 +1,4 @@
-import re
+import os, re
 
 from flask import Blueprint, g, render_template, redirect, url_for, request
 
@@ -12,7 +12,7 @@ def index():
     return redirect(url_for('main.list'))
 
 @app.route('/list')
-def list():
+def repo_list():
     return render_template('list.html')
 
 @app.route('/new', methods=['GET'])
@@ -43,15 +43,31 @@ def new_post():
 
     repo = git.new_repo(note.id)
     for name, data in file_list:
+        print name, data
         repo.stage_data(name, data)
     commit_id = repo.do_commit('Gitnote',
                                 committer='gitnote <gitnote@gitnote.com>')
             
-    return redirect('/%d/view' % note.id)
+    return redirect('/%d' % note.id)
 
-@app.route('/<int:id>/view')
+@app.route('/<int:id>')
 def view(id):
-    return render_template('editor.html', note=note)
+    note = g.session.query(Note).filter(Note.id==id).first()
+    if not note:
+        return redirect('/new')
+    
+    repo = git.get_repo(id)
+    path_list =  list(repo.open_index())
+    file_list = []
+    for path in path_list:
+        f = open(os.path.join(repo.path, path), 'rb')
+        try:
+            data = f.read()
+        finally:
+            f.close()
+        file_list.append({'name':path, 'data':data})
+
+    return render_template('editor.html', note=note, file_list=file_list)
 
 @app.route('/edit')
 def edit():

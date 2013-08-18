@@ -27,38 +27,38 @@ Editor
 </style>
 {% endblock %}
 
-{% macro file_editor() -%}
+{% macro file_editor(name, data) -%}
 <div class="file">
     <div class="file-meta row">
         <div class="col-lg-4">
-            <input type="text" placeholder="input this file name." class="file-name form-control">
+            <input type="text" placeholder="input this file name." class="file-name form-control" value="{{name}}">
         </div>
     </div>
     <textarea class="file-editor-textarea"></textarea>
-    <div class="file-editor row"></div>
+    <div class="file-editor row">{{ data }}</div>
 </div>
 {%- endmacro %}
 
 {% block body %}
-{% if not filelist %}
+{% if not note %}
 <h1>New Note</h1>
 {% else %}
-<h1>Edit Note</h1>
+<h1>{{note.name}}</h1>
 {% endif %}
 
 <form method="post">
 <div id="list-files">
-{% if not filelist %}
-    {{ file_editor() }}
+{% if not file_list %}
+    {{ file_editor('', '') }}
 {% else %}
-    {% for file in filelist %}
-        {{ file_editor() }}
+    {% for file in file_list %}
+        {{ file_editor(file.name, file.data) }}
     {% endfor %}
 {% endif %}
 </div>
 
 <script type="text/html" id="new-editor">
-{{ file_editor() }}
+{{ file_editor('', '') }}
 </script>
 
 <script>

@@ -9,7 +9,7 @@ app = Blueprint('main', __name__)
 
 @app.route('/')
 def index():
-    return redirect(url_for('main.list'))
+    return redirect(url_for('main.new'))
 
 @app.route('/list')
 def repo_list():
